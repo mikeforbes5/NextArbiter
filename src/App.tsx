@@ -66,7 +66,9 @@ function App() {
               {queue.map((item) => (
                 <div
                   key={item.label}
+                  aria-label={`${item.label}: ${item.value}`}
                   className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3"
+                  role="group"
                 >
                   <span className="text-sm font-medium text-muted-foreground">{item.label}</span>
                   <span className={`text-2xl font-semibold ${item.tone}`}>{item.value}</span>

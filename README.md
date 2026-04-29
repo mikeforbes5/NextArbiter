@@ -22,3 +22,15 @@ Build for production:
 ```bash
 npm run build
 ```
+
+Run deterministic browser tests:
+
+```bash
+npm run test:e2e
+```
+
+If Playwright browsers are not installed yet:
+
+```bash
+npx playwright install chromium
+```
