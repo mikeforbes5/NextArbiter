@@ -1,14 +1,42 @@
-import { ArrowRight, Plus, Scale } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowRight, Moon, Plus, Scale, Sun } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
 const queue = [
-  { label: 'New evidence', value: '12', tone: 'text-sky-700' },
-  { label: 'Ready for review', value: '8', tone: 'text-emerald-700' },
-  { label: 'Awaiting response', value: '5', tone: 'text-amber-700' },
+  { label: 'New evidence', value: '12', tone: 'text-sky-700 dark:text-sky-300' },
+  { label: 'Ready for review', value: '8', tone: 'text-emerald-700 dark:text-emerald-300' },
+  { label: 'Awaiting response', value: '5', tone: 'text-amber-700 dark:text-amber-300' },
 ]
 
+type Theme = 'light' | 'dark'
+
+function getSavedTheme(): Theme {
+  if (typeof window === 'undefined') {
+    return 'light'
+  }
+
+  try {
+    return window.localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+  } catch {
+    return 'light'
+  }
+}
+
 function App() {
+  const [theme, setTheme] = useState<Theme>(getSavedTheme)
+  const isDark = theme === 'dark'
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark)
+
+    try {
+      window.localStorage.setItem('theme', theme)
+    } catch {
+      // Keep the in-session theme active even if storage is unavailable.
+    }
+  }, [isDark, theme])
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 md:px-10">
@@ -22,10 +50,25 @@ function App() {
               <h1 className="text-xl font-semibold tracking-tight">Case command center</h1>
             </div>
           </div>
-          <Button>
-            <Plus className="size-4" aria-hidden="true" />
-            New case
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              size="icon"
+              type="button"
+              variant="outline"
+              onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            >
+              {isDark ? (
+                <Sun className="size-4" aria-hidden="true" />
+              ) : (
+                <Moon className="size-4" aria-hidden="true" />
+              )}
+            </Button>
+            <Button>
+              <Plus className="size-4" aria-hidden="true" />
+              New case
+            </Button>
+          </div>
         </nav>
 
         <div className="grid flex-1 gap-6 py-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
