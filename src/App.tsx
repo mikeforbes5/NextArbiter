@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   ArrowRight,
   Building2,
+  CheckCircle2,
   ClipboardCheck,
   CreditCard,
   FileText,
@@ -26,6 +27,7 @@ const workflowPhases = [
   {
     label: 'Proposal',
     color: 'bg-red-500',
+    accent: 'border-red-200 bg-red-50 dark:border-red-950 dark:bg-red-950/25',
     tone: 'text-red-700 dark:text-red-300',
     status: 'Scope, cost, schedule, PO',
     count: '14',
@@ -33,6 +35,7 @@ const workflowPhases = [
   {
     label: 'Execution',
     color: 'bg-yellow-400',
+    accent: 'border-yellow-200 bg-yellow-50 dark:border-yellow-950 dark:bg-yellow-950/25',
     tone: 'text-yellow-700 dark:text-yellow-300',
     status: 'Field, COC, lab, report',
     count: '9',
@@ -40,6 +43,7 @@ const workflowPhases = [
   {
     label: 'Payment / Completed',
     color: 'bg-green-500',
+    accent: 'border-green-200 bg-green-50 dark:border-green-950 dark:bg-green-950/25',
     tone: 'text-green-700 dark:text-green-300',
     status: 'Invoice, payment, release',
     count: '6',
@@ -80,12 +84,12 @@ const serviceCatalog = [
 ]
 
 const projectSteps = [
-  { label: 'Client request', icon: LogIn },
-  { label: 'Proposal / SOW', icon: FileText },
-  { label: 'Field sampling', icon: ClipboardCheck },
-  { label: 'COC + shipment', icon: Truck },
-  { label: 'Lab results', icon: FlaskConical },
-  { label: 'Invoice + payment', icon: CreditCard },
+  { label: 'Client request', description: 'Portal intake and project details', icon: LogIn },
+  { label: 'Proposal / SOW', description: 'Scope, pricing, schedule, and PO', icon: FileText },
+  { label: 'Field sampling', description: 'Photos, media, locations, and notes', icon: ClipboardCheck },
+  { label: 'COC + shipment', description: 'Chain-of-custody and FedEx handoff', icon: Truck },
+  { label: 'Lab results', description: 'PDF intake and result summaries', icon: FlaskConical },
+  { label: 'Invoice + payment', description: 'QuickBooks, payment, release', icon: CreditCard },
 ]
 
 type Theme = 'light' | 'dark'
@@ -153,25 +157,25 @@ function App() {
         </nav>
 
         <div className="grid flex-1 gap-6 py-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <section className="flex min-h-[620px] overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-            <div className="flex w-12 shrink-0 flex-col">
-              <div className="flex flex-1 items-center justify-center bg-red-500 px-2 text-center text-[10px] font-semibold uppercase leading-4 text-white">
+          <section className="grid overflow-hidden rounded-lg border border-border bg-card shadow-sm lg:min-h-[620px] lg:grid-cols-[6rem_1fr]">
+            <div className="grid min-h-12 grid-cols-3 lg:min-h-0 lg:grid-cols-1 lg:grid-rows-3">
+              <div className="flex items-center justify-center bg-red-500 px-3 py-3 text-center text-xs font-semibold uppercase leading-4 text-white lg:[writing-mode:vertical-rl]">
                 Asbestos
               </div>
-              <div className="flex flex-1 items-center justify-center bg-yellow-400 px-2 text-center text-[10px] font-semibold uppercase leading-4 text-slate-950">
+              <div className="flex items-center justify-center bg-yellow-400 px-3 py-3 text-center text-xs font-semibold uppercase leading-4 text-slate-950 lg:[writing-mode:vertical-rl]">
                 Mold
               </div>
-              <div className="flex flex-1 items-center justify-center bg-green-500 px-2 text-center text-[10px] font-semibold uppercase leading-4 text-white">
+              <div className="flex items-center justify-center bg-green-500 px-3 py-3 text-center text-xs font-semibold uppercase leading-4 text-white lg:[writing-mode:vertical-rl]">
                 Environmental
               </div>
             </div>
-            <div className="flex flex-1 flex-col justify-between p-5 md:p-7">
-              <div className="space-y-5">
-                <div className="space-y-3">
-                  <p className="text-sm font-medium uppercase text-muted-foreground">
+            <div className="flex flex-col justify-between p-5 md:p-8">
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <p className="text-sm font-medium uppercase tracking-[0.16em] text-muted-foreground">
                     Environmental consulting platform
                   </p>
-                  <h2 className="max-w-2xl text-4xl font-semibold md:text-5xl">
+                  <h2 className="max-w-2xl text-4xl font-semibold leading-tight md:text-5xl">
                     Proposal, execution, and payment in one tenant portal.
                   </h2>
                   <p className="max-w-2xl text-base leading-7 text-muted-foreground">
@@ -184,7 +188,9 @@ function App() {
                 <div className="grid gap-3 sm:grid-cols-3">
                   {accessPaths.map((path) => (
                     <div key={path.label} className="rounded-md border border-border bg-background p-4">
-                      <path.icon className="mb-3 size-5 text-primary" aria-hidden="true" />
+                      <div className="mb-3 flex size-9 items-center justify-center rounded-md bg-muted text-primary">
+                        <path.icon className="size-5" aria-hidden="true" />
+                      </div>
                       <h3 className="text-sm font-semibold">{path.label}</h3>
                       <p className="mt-2 text-sm leading-6 text-muted-foreground">{path.detail}</p>
                     </div>
@@ -221,7 +227,7 @@ function App() {
                   <div
                     key={phase.label}
                     aria-label={`${phase.label}: ${phase.count} projects`}
-                    className="rounded-md border border-border bg-background p-4"
+                    className={`rounded-md border p-4 ${phase.accent}`}
                     role="group"
                   >
                     <div className={`mb-4 h-2 rounded-full ${phase.color}`} />
@@ -242,11 +248,16 @@ function App() {
                 <p className="text-sm text-muted-foreground">Shared workflow</p>
                 <h2 className="text-2xl font-semibold">Project lifecycle</h2>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {projectSteps.map((step) => (
-                  <div key={step.label} className="flex items-center gap-3 rounded-md bg-muted p-3">
-                    <step.icon className="size-5 text-primary" aria-hidden="true" />
-                    <span className="text-sm font-medium">{step.label}</span>
+                  <div key={step.label} className="flex items-start gap-3 rounded-md bg-muted p-3">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-background text-primary">
+                      <step.icon className="size-5" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{step.label}</p>
+                      <p className="mt-1 text-sm leading-5 text-muted-foreground">{step.description}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -260,10 +271,16 @@ function App() {
               <div className="grid gap-4 lg:grid-cols-3">
                 {serviceCatalog.map((category) => (
                   <div key={category.name} className="rounded-md border border-border bg-background p-4">
-                    <h3 className="font-semibold">{category.name}</h3>
+                    <div className="mb-3 flex items-center justify-between">
+                      <h3 className="font-semibold">{category.name}</h3>
+                      <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                        {category.items.length} types
+                      </span>
+                    </div>
                     <ul className="mt-3 space-y-2">
                       {category.items.map((item) => (
-                        <li key={item} className="text-sm text-muted-foreground">
+                        <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden="true" />
                           {item}
                         </li>
                       ))}
